@@ -23,13 +23,12 @@ int main(int argc, char * argv[])
     {
         /* Read screen and write screen. */
 
-        printf("Type something: ");
+        printf("Type something:\n");
         
         while (getline(&buffer,&bufsize,stdin) != -1)
         {
             /* Tallennus listaan? */    
         }    
-        
         
         // printf("%zu characters were read.\n",characters);
         printf("You typed: '%s'\n",buffer);
