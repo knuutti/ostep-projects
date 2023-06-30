@@ -3,11 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/*
-Dynaaminen muistinvaraus ja getline
-https://stackoverflow.com/questions/63309517/allocate-memory-for-a-dynamic-string-of-char
-*/
-
 int main(int argc, char * argv[])
 {
     char * buffer;
@@ -94,6 +89,8 @@ int main(int argc, char * argv[])
     }
     
     free(buffer);
+
+    printf("Kiitos ohjelman käytöstä.\n");
 
     return 0;
 }
