@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
 
 /*
 Dynaaminen muistinvaraus ja getline
@@ -12,7 +11,7 @@ https://stackoverflow.com/questions/63309517/allocate-memory-for-a-dynamic-strin
 int main(int argc, char * argv[])
 {
     char * buffer;
-    size_t bufsize = UINT_MAX;
+    size_t bufsize = 0;
     size_t characters;
     FILE * tiedosto_r;
     FILE * tiedosto_w;
