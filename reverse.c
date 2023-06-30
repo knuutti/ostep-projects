@@ -12,7 +12,7 @@ int main(int argc, char * argv[])
 {
     char * buffer;
     size_t bufsize = 0;
-    size_t characters;
+    // size_t characters;
     FILE * tiedosto_r;
     FILE * tiedosto_w;
 
@@ -29,8 +29,14 @@ int main(int argc, char * argv[])
         /* Read screen and write screen. */
 
         printf("Type something: ");
-        characters = getline(&buffer,&bufsize,stdin);
-        printf("%zu characters were read.\n",characters);
+        
+        while (getline(&buffer,&bufsize,stdin) != -1)
+        {
+            /* Tallennus listaan? */    
+        }    
+        
+        
+        // printf("%zu characters were read.\n",characters);
         printf("You typed: '%s'\n",buffer);
     }
     else if (argc == 2)
