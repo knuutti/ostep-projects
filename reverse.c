@@ -60,9 +60,13 @@ int main(int argc, char * argv[])
         }
         
         tiedosto_r = fopen(argv[1], "r");
-        fclose(tiedosto_r);
-
         tiedosto_w = fopen(argv[2], "w");
+        while (getline(&buffer,&bufsize,tiedosto_r) != -1)
+        {
+            fprintf(tiedosto_w, "%s", buffer);
+        }
+
+        fclose(tiedosto_r);
         fclose(tiedosto_w);
     }
     else
@@ -74,6 +78,6 @@ int main(int argc, char * argv[])
     }
     
     free(buffer);
-    
+
     return 0;
 }
