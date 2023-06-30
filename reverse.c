@@ -42,11 +42,17 @@ int main(int argc, char * argv[])
     else if (argc == 2)
     {
         /* Read file and write screen. */
-        tiedosto_r = fopen(argv[1], "r");
+        if((tiedosto_r = fopen(argv[1], "r")) == NULL)
+        {
+            fprintf(stderr, "Failed to open %s\n", argv[1]);
+            exit(1);
+        }
+
         while (getline(&buffer,&bufsize,tiedosto_r) != -1)
         {
             printf("%s", buffer);
         }
+
         printf("\n");
         fclose(tiedosto_r);
     }
@@ -59,8 +65,18 @@ int main(int argc, char * argv[])
             exit(1);
         }
         
-        tiedosto_r = fopen(argv[1], "r");
-        tiedosto_w = fopen(argv[2], "w");
+        if((tiedosto_r = fopen(argv[1], "r")) == NULL)
+        {
+            fprintf(stderr, "Failed to open %s\n", argv[1]);
+            exit(1);
+        }
+        
+        if((tiedosto_w = fopen(argv[2], "w")) == NULL)
+        {
+            fprintf(stderr, "Failed to open %s\n", argv[2]);
+            exit(1);
+        }
+
         while (getline(&buffer,&bufsize,tiedosto_r) != -1)
         {
             fprintf(tiedosto_w, "%s", buffer);
