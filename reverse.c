@@ -74,9 +74,6 @@ int main(int argc, char * argv[])
     }
     
     free(buffer);
-
-    printf("Hello world!\n");
-    printf("Arguments: %d\n", argc);
-
+    
     return 0;
 }
