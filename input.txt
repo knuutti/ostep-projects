@@ -1,4 +1,8 @@
-Hello
-Joona
-Eetu
-Bye
+1
+2
+33
+4
+3
+4t
+34
+3

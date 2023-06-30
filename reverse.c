@@ -1,111 +1,104 @@
-#define  _GNU_SOURCE
+/* L6T1, Eetu Knutars, 14.2.2022 */
+
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <limits.h>
+#include <stdlib.h>
 
-/* Creating list structure */
-struct list
-{
-    char * line;
-    struct list * next;
-    struct list * prev;
-};
+typedef struct rows {
+    char * row;
+    struct rows * next;
+    struct rows * prev;
+    } ROWS;
 
-int main(int argc, char * argv[])
-{
+ROWS *pStart = NULL, *pEnd = NULL;
+ROWS *pNew, *ptr;
+
+size_t max_length = 1024;
+
+int reverse (FILE *input, FILE *output) {
+
     char * buffer;
-    size_t bufsize = 0;
-    FILE * tiedosto_r;
-    FILE * tiedosto_w;
-
-    /* List pointers */
-    struct list * pStart = NULL, * pEnd = NULL, * ptr;
-
-    /* Allocating memory for input buffer (pitää vissiin siirtää) */
-    buffer = (char *)malloc(bufsize * sizeof(char));
+    buffer = (char *)malloc(max_length * sizeof(char));
     if(buffer == NULL)
     {
         fprintf(stderr, "Unable to allocate buffer.\n");
         exit(1);
     }
 
+    while (1) {
+        size_t characters = getline(&buffer, &max_length, input);
+
+        if (characters == 1) {
+            break;
+        }
+
+        if ((pNew = (ROWS*)malloc(sizeof(ROWS))) == NULL ){
+            perror("Muistin varaus epäonnistui");
+            exit(1);
+        }
+        if ((pNew->row = malloc(max_length)) == NULL ){
+            perror("Muistin varaus epäonnistui");
+            exit(1);
+        }
+
+        strcpy(pNew->row, buffer); 
+        pNew->next = NULL;
+
+        if (pStart == NULL) { 
+            pStart = pNew;
+            pEnd = pNew;
+        } 
+        else { 
+            pEnd->next = pNew;
+            pNew->prev = pEnd;
+            pEnd = pNew;
+        }
+
+    }
+
+    ptr = pEnd;
+    while (ptr != NULL) {
+        fprintf(output, "%s", ptr->row);
+        ptr = ptr->prev;
+    }
+
+    ptr = pStart;
+    while (ptr != NULL) {
+        pStart = ptr->next;
+        free(ptr);
+        ptr = pStart;
+    }
+    
+    return(0);
+}
+
+int main (int argc, char * argv[]) {
+
     if(argc == 1)
     {
         /* Read screen and write screen. */
-
-        printf("Type something:\n");
-        
-        while (getline(&buffer,&bufsize,stdin) != -1)
-        {   
-            /* Allocating memory */
-            if ((ptr = (struct list*)malloc(sizeof(struct list))) == NULL)
-            {
-                fprintf(stderr, "Unable to allocate buffer.\n");
-                exit(1);
-            }
-
-            /* Allocating memory */
-            if ((ptr->line = malloc(sizeof(UINT_MAX))) == NULL)
-            {
-                fprintf(stderr, "Unable to allocate buffer.\n");
-                exit(1);
-            }
-
-            /* New node values */
-            strcpy(ptr->line,buffer);
-            ptr->next = NULL;
-
-            /* Adding new node to the end of the list */
-            if(pStart == NULL) /* If empty list */
-            {
-                pStart = ptr;
-                pEnd = ptr;
-            }
-            else /* To end of the list */
-            {
-                pEnd->next = ptr;
-                ptr->prev = pEnd;
-                pEnd = ptr;
-            }
-        }    
-
-        /* Printing list in reverse order */
-        ptr = pEnd;
-        printf("You typed:\n");
-        while(ptr != NULL)
-        {
-            printf("%s", ptr->line);
-            ptr = ptr->prev;
-        }
-        
-        /* Free used memory */
-        ptr = pStart;
-        while (ptr != NULL) {
-            pStart = ptr->next;
-            free(ptr);
-            ptr = pStart;
-        }
+        reverse(stdin, stdout);
     }
     else if (argc == 2)
     {
+        FILE *input_file = NULL;
         /* Read file and write screen. */
-        if((tiedosto_r = fopen(argv[1], "r")) == NULL)
+        if((input_file = fopen(argv[1], "r")) == NULL)
         {
             fprintf(stderr, "Failed to open %s\n", argv[1]);
             exit(1);
         }
 
-        while (getline(&buffer,&bufsize,tiedosto_r) != -1)
-        {
-            printf("%s", buffer);
-        }
-
-        printf("\n");
-        fclose(tiedosto_r);
+        reverse(input_file, stdout);
+        
+        fclose(input_file);
     }
     else if (argc == 3)
     {
+
+        FILE * input_file = NULL;
+        FILE * output_file = NULL;
+
         /* Read file and write file. */
         if (argv[1] == argv[2])
         {
@@ -113,25 +106,22 @@ int main(int argc, char * argv[])
             exit(1);
         }
         
-        if((tiedosto_r = fopen(argv[1], "r")) == NULL)
+        if((input_file = fopen(argv[1], "r")) == NULL)
         {
             fprintf(stderr, "Failed to open %s\n", argv[1]);
             exit(1);
         }
         
-        if((tiedosto_w = fopen(argv[2], "w")) == NULL)
+        if((output_file = fopen(argv[2], "w")) == NULL)
         {
             fprintf(stderr, "Failed to open %s\n", argv[2]);
             exit(1);
         }
 
-        while (getline(&buffer,&bufsize,tiedosto_r) != -1)
-        {
-            fprintf(tiedosto_w, "%s", buffer);
-        }
+        reverse(input_file, output_file);
 
-        fclose(tiedosto_r);
-        fclose(tiedosto_w);
+        fclose(input_file);
+        fclose(output_file);
     }
     else
     {
@@ -140,10 +130,8 @@ int main(int argc, char * argv[])
             "prompt> ./reverse input.txt\n"
             "prompt> ./reverse input.txt output.txt\n");
     }
-    
-    free(buffer);
 
     printf("Kiitos ohjelman käytöstä.\n");
 
-    return 0;
+    return(0);
 }
