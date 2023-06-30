@@ -4,6 +4,7 @@
 #include <string.h>
 #include <limits.h>
 
+/* Creating list structure */
 struct list
 {
     char * line;
@@ -18,9 +19,10 @@ int main(int argc, char * argv[])
     FILE * tiedosto_r;
     FILE * tiedosto_w;
 
+    /* List pointers */
     struct list * pStart = NULL, * pEnd = NULL, * ptr;
 
-    /* Muistin varaus (pitää vissiin siirtää)*/
+    /* Allocating memory for input buffer (pitää vissiin siirtää) */
     buffer = (char *)malloc(bufsize * sizeof(char));
     if(buffer == NULL)
     {
@@ -36,24 +38,31 @@ int main(int argc, char * argv[])
         
         while (getline(&buffer,&bufsize,stdin) != -1)
         {   
+            /* Allocating memory */
             if ((ptr = (struct list*)malloc(sizeof(struct list))) == NULL)
             {
                 fprintf(stderr, "Unable to allocate buffer.\n");
                 exit(1);
             }
+
+            /* Allocating memory */
             if ((ptr->line = malloc(sizeof(UINT_MAX))) == NULL)
             {
                 fprintf(stderr, "Unable to allocate buffer.\n");
                 exit(1);
             }
+
+            /* New node values */
             strcpy(ptr->line,buffer);
             ptr->next = NULL;
-            if(pStart == NULL)
+
+            /* Adding new node to the end of the list */
+            if(pStart == NULL) /* If empty list */
             {
                 pStart = ptr;
                 pEnd = ptr;
             }
-            else
+            else /* To end of the list */
             {
                 pEnd->next = ptr;
                 ptr->prev = pEnd;
@@ -61,6 +70,7 @@ int main(int argc, char * argv[])
             }
         }    
 
+        /* Printing list in reverse order */
         ptr = pEnd;
         printf("You typed:\n");
         while(ptr != NULL)
@@ -69,6 +79,7 @@ int main(int argc, char * argv[])
             ptr = ptr->prev;
         }
         
+        /* Free used memory */
         ptr = pStart;
         while (ptr != NULL) {
             pStart = ptr->next;
