@@ -2,16 +2,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
+
+struct list
+{
+    char * line;
+    struct list * next;
+    struct list * prev;
+};
 
 int main(int argc, char * argv[])
 {
     char * buffer;
     size_t bufsize = 0;
-    // size_t characters;
     FILE * tiedosto_r;
     FILE * tiedosto_w;
 
-    /* Muistin varaus */
+    struct list * pStart = NULL, * pEnd = NULL, * ptr;
+
+    /* Muistin varaus (pitää vissiin siirtää)*/
     buffer = (char *)malloc(bufsize * sizeof(char));
     if(buffer == NULL)
     {
@@ -26,12 +35,46 @@ int main(int argc, char * argv[])
         printf("Type something:\n");
         
         while (getline(&buffer,&bufsize,stdin) != -1)
-        {
-            /* Tallennus listaan? */    
+        {   
+            if ((ptr = (struct list*)malloc(sizeof(struct list))) == NULL)
+            {
+                fprintf(stderr, "Unable to allocate buffer.\n");
+                exit(1);
+            }
+            if ((ptr->line = malloc(sizeof(UINT_MAX))) == NULL)
+            {
+                fprintf(stderr, "Unable to allocate buffer.\n");
+                exit(1);
+            }
+            strcpy(ptr->line,buffer);
+            ptr->next = NULL;
+            if(pStart == NULL)
+            {
+                pStart = ptr;
+                pEnd = ptr;
+            }
+            else
+            {
+                pEnd->next = ptr;
+                ptr->prev = pEnd;
+                pEnd = ptr;
+            }
         }    
+
+        ptr = pEnd;
+        printf("You typed:\n");
+        while(ptr != NULL)
+        {
+            printf("%s", ptr->line);
+            ptr = ptr->prev;
+        }
         
-        // printf("%zu characters were read.\n",characters);
-        printf("You typed: '%s'\n",buffer);
+        ptr = pStart;
+        while (ptr != NULL) {
+            pStart = ptr->next;
+            free(ptr);
+            ptr = pStart;
+        }
     }
     else if (argc == 2)
     {
