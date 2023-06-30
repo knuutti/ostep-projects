@@ -1,8 +1,7 @@
-/* L6T1, Eetu Knutars, 14.2.2022 */
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 
 typedef struct rows {
     char * row;
@@ -13,12 +12,12 @@ typedef struct rows {
 ROWS *pStart = NULL, *pEnd = NULL;
 ROWS *pNew, *ptr;
 
-size_t max_length = 1024;
+size_t bufsize = 0;
 
 int reverse (FILE *input, FILE *output) {
 
     char * buffer;
-    buffer = (char *)malloc(max_length * sizeof(char));
+    buffer = (char *)malloc(bufsize * sizeof(char));
     if(buffer == NULL)
     {
         fprintf(stderr, "Unable to allocate buffer.\n");
@@ -26,7 +25,7 @@ int reverse (FILE *input, FILE *output) {
     }
 
     while (1) {
-        size_t characters = getline(&buffer, &max_length, input);
+        size_t characters = getline(&buffer, &bufsize, input);
 
         if (characters == 1) {
             break;
@@ -36,7 +35,7 @@ int reverse (FILE *input, FILE *output) {
             perror("Muistin varaus epäonnistui");
             exit(1);
         }
-        if ((pNew->row = malloc(max_length)) == NULL ){
+        if ((pNew->row = malloc(UINT_MAX)) == NULL ){
             perror("Muistin varaus epäonnistui");
             exit(1);
         }
