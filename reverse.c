@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <limits.h>
 
 typedef struct rows {
-    char * row;
+    char *row;
     struct rows * next;
     struct rows * prev;
     } ROWS;
@@ -16,7 +15,7 @@ size_t bufsize = 0;
 
 int reverse (FILE *input, FILE *output) {
 
-    char * buffer;
+    char *buffer;
     buffer = (char *)malloc(bufsize * sizeof(char));
     if(buffer == NULL)
     {
@@ -27,16 +26,18 @@ int reverse (FILE *input, FILE *output) {
     while (1) {
         size_t characters = getline(&buffer, &bufsize, input);
 
-        if (characters == 1) {
+        // Stop reading input on file end
+        // If input is read from stdin, user can end the read by pressing Ctrl+D
+        if (characters == -1) {
             break;
         }
 
         if ((pNew = (ROWS*)malloc(sizeof(ROWS))) == NULL ){
-            perror("Muistin varaus epäonnistui");
+            fprintf(stderr, "malloc failed\n");
             exit(1);
         }
-        if ((pNew->row = malloc(UINT_MAX)) == NULL ){
-            perror("Muistin varaus epäonnistui");
+        if ((pNew->row = (char*)malloc(bufsize)) == NULL ){
+            fprintf(stderr, "malloc failed\n");
             exit(1);
         }
 
@@ -84,7 +85,7 @@ int main (int argc, char * argv[]) {
         /* Read file and write screen. */
         if((input_file = fopen(argv[1], "r")) == NULL)
         {
-            fprintf(stderr, "Failed to open %s\n", argv[1]);
+            fprintf(stderr, "error: cannot open file '%s'\n", argv[1]);
             exit(1);
         }
 
@@ -107,13 +108,13 @@ int main (int argc, char * argv[]) {
         
         if((input_file = fopen(argv[1], "r")) == NULL)
         {
-            fprintf(stderr, "Failed to open %s\n", argv[1]);
+            fprintf(stderr, "error: cannot open file '%s'\n", argv[1]);
             exit(1);
         }
         
         if((output_file = fopen(argv[2], "w")) == NULL)
         {
-            fprintf(stderr, "Failed to open %s\n", argv[2]);
+            fprintf(stderr, "error: cannot open file '%s'\n", argv[2]);
             exit(1);
         }
 
@@ -124,13 +125,9 @@ int main (int argc, char * argv[]) {
     }
     else
     {
-        fprintf(stderr, "This program should be invoked in one of the following ways:\n"
-            "prompt> ./reverse\n"
-            "prompt> ./reverse input.txt\n"
-            "prompt> ./reverse input.txt output.txt\n");
+        fprintf(stderr, "usage: reverse <input> <output>\n");
+        exit(1);
     }
-
-    printf("Kiitos ohjelman käytöstä.\n");
 
     return(0);
 }
