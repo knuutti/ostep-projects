@@ -1,25 +1,35 @@
+/* 
+CT30A3370 Käyttöjärjestelmät ja systeemiohjelmointi
+Project 1: Warmup to C and Unix programming
+
+Authors: Eetu Knutars & Joona Lappalainen
+Last modified: 1.7.2023
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
+// Linked list structure
 typedef struct rows {
-    char *row;
+    char * row;
     struct rows * next;
     struct rows * prev;
     } ROWS;
 
-ROWS *pStart = NULL, *pEnd = NULL;
-ROWS *pNew, *ptr;
+// Defining pointers
+ROWS * pStart = NULL, * pEnd = NULL;
+ROWS * pNew, * ptr;
 
 size_t bufsize = 0;
 
-int reverse (FILE *input, FILE *output) {
+// Reverse function: writes the input file and writes it reversed to the output file
+int reverse (FILE * input, FILE * output) {
 
     char *buffer;
-    buffer = (char *)malloc(bufsize * sizeof(char));
-    if(buffer == NULL)
+    if((buffer = (char *)malloc(bufsize * sizeof(char))) == NULL)
     {
-        fprintf(stderr, "Unable to allocate buffer.\n");
+        fprintf(stderr, "malloc failed\n");
         exit(1);
     }
 
@@ -72,54 +82,40 @@ int reverse (FILE *input, FILE *output) {
     return(0);
 }
 
+FILE * open_file(char * file_name, char * mode) {
+    FILE * file = NULL;
+    if((file = fopen(file_name, mode)) == NULL) {
+        fprintf(stderr, "error: cannot open file '%s'\n", file_name);
+        exit(1);
+    }
+    return file;
+}
+
 int main (int argc, char * argv[]) {
 
     if(argc == 1)
     {
-        /* Read screen and write screen. */
+        // Read from user (standard input), write to screen (standard output)
         reverse(stdin, stdout);
     }
     else if (argc == 2)
     {
-        FILE *input_file = NULL;
-        /* Read file and write screen. */
-        if((input_file = fopen(argv[1], "r")) == NULL)
-        {
-            fprintf(stderr, "error: cannot open file '%s'\n", argv[1]);
-            exit(1);
-        }
-
+        // Read from input file, write to screen (standard output)
+        FILE * input_file = open_file(argv[1], "r");
         reverse(input_file, stdout);
-        
         fclose(input_file);
     }
     else if (argc == 3)
     {
-
-        FILE * input_file = NULL;
-        FILE * output_file = NULL;
-
-        /* Read file and write file. */
+        // Read from input file, write to output file
         if (argv[1] == argv[2])
         {
             fprintf(stderr, "Input and output file must differ.\n");
             exit(1);
         }
-        
-        if((input_file = fopen(argv[1], "r")) == NULL)
-        {
-            fprintf(stderr, "error: cannot open file '%s'\n", argv[1]);
-            exit(1);
-        }
-        
-        if((output_file = fopen(argv[2], "w")) == NULL)
-        {
-            fprintf(stderr, "error: cannot open file '%s'\n", argv[2]);
-            exit(1);
-        }
-
+        FILE * input_file = open_file(argv[1], "r");
+        FILE * output_file = open_file(argv[2], "w");
         reverse(input_file, output_file);
-
         fclose(input_file);
         fclose(output_file);
     }
