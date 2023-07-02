@@ -3,9 +3,10 @@ CT30A3370 Käyttöjärjestelmät ja systeemiohjelmointi
 Project 1: Warmup to C and Unix programming
 
 Authors: Eetu Knutars & Joona Lappalainen
-Last modified: 1.7.2023
+Last modified: 2.7.2023
 */
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
