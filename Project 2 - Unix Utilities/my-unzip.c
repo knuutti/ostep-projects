@@ -42,7 +42,7 @@ int main (int argc, char * argv[]) {
     /* Exit successfully if no input files are given */
     if(argc == 1)
     {
-        fprintf(stderr, "my-unzip: file1\n");
+        fprintf(stderr, "my-unzip: file1 [file2 ...]\n");
         exit(1);
     }
 
