@@ -9,9 +9,6 @@ Last modified: 3.7.2023
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define MAX 1024
-
-size_t bufsize = 0;
 
 // Reads the input file and writes it decompressed to the screen
 int read_file (FILE * input) {
@@ -34,7 +31,7 @@ int read_file (FILE * input) {
 FILE * open_file(char * file_name, char * mode) {
     FILE * file = NULL;
     if((file = fopen(file_name, mode)) == NULL) {
-        fprintf(stderr, "my-unzip cannot open file");
+        fprintf(stderr, "my-unzip: cannot open file");
         exit(1);
     }
     return file;

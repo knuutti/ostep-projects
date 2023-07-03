@@ -40,7 +40,6 @@ int main(int argc, char * argv[]) {
             }
             fclose(file);
         }
-        exit(0);
     }
 
     return(0);

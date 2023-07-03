@@ -9,9 +9,6 @@ Last modified: 3.7.2023
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define MAX 1024
-
-size_t bufsize = 0;
 
 // Reads the input file and writes it compressed to the output file
 int read_file (FILE * input, FILE * output) {
