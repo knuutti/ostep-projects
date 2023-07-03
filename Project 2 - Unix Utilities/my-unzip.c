@@ -16,18 +16,15 @@ size_t bufsize = 0;
 // Reads the input file and writes it decompressed to the screen
 int read_file (FILE * input) {
 
-    char * current = NULL;
+    int tmp;
+    int chr;
     
-    current = (char *)malloc(sizeof(char));
-
-    fseek(input, sizeof(int), SEEK_SET);
-
-    while(1) {
-            fread(current, sizeof(char), 1, input);
-            printf("%s", current);
-        
-        if (feof(input)) {
-            break;
+    while(fread(&tmp, sizeof(int), 1, input)) 
+    {   
+        fread(&chr, sizeof(char), 1, input);
+        for(int i = 0; i < tmp; i++)
+        {
+            printf("%c", chr);
         }
     }
 
