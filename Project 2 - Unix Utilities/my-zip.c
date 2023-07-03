@@ -57,15 +57,19 @@ FILE * open_file(char * file_name, char * mode) {
 int main (int argc, char * argv[]) {
     
     /* Exit successfully if no input files are given */
-    if(argc == 1)
+    if(argc < 3)
     {
-        exit(0);
+        fprintf(stderr, "my-zip: file1 [file2 ...]\n");
+        exit(1);
     }
 
-    FILE * input_file = open_file(argv[1], "r");
-    FILE * output_file = open_file(argv[2], "w");
-    read_file(input_file, output_file);
-    fclose(input_file);
+    FILE * output_file = open_file(argv[argc-1], "w");
+    FILE * input_file = NULL;
+    for (int i = 1; i < argc - 1; i++) {
+        input_file = open_file(argv[1], "r");
+        read_file(input_file, output_file);
+        fclose(input_file);
+    }
     fclose(output_file);
     printf("\n");
 
