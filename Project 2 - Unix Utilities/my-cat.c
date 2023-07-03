@@ -30,7 +30,7 @@ int read_file (FILE * input) {
         if (characters == -1) {
             break;
         }
-        fprintf(stdout, "%s", buffer);
+        printf("%s", buffer);
     }
     return(0);
 }
