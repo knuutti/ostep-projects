@@ -30,6 +30,7 @@ int read_file (FILE * input) {
         if (characters == -1) {
             break;
         }
+        fprintf(input, "%s", buffer);
     }
     return(0);
 }
@@ -43,10 +44,9 @@ FILE * open_file(char * file_name, char * mode) {
     return file;
 }
 
-int main (char * argv[]) {
-    int i = 1;
-
-    for(i;i<sizeof(argv);i++)
+int main (int argc, char * argv[]) {
+    
+    for(int i = 1; i <= argc; i++)
     {
         FILE * input_file = open_file(argv[i], "r");
         read_file(input_file);
