@@ -3,7 +3,7 @@ CT30A3370 Käyttöjärjestelmät ja systeemiohjelmointi
 Project 1: Warmup to C and Unix programming
 
 Authors: Eetu Knutars & Joona Lappalainen
-Last modified: 2.7.2023
+Last modified: 3.7.2023
 */
 
 #define _GNU_SOURCE
@@ -24,7 +24,7 @@ ROWS * pNew, * ptr;
 
 size_t bufsize = 0;
 
-// Reverse function: writes the input file and writes it reversed to the output file
+// Reverse function: reads the input file and writes it reversed to the output file
 int reverse (FILE * input, FILE * output) {
 
     char *buffer;

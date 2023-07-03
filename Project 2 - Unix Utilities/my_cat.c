@@ -13,7 +13,7 @@ Last modified: 3.7.2023
 
 size_t bufsize = 0;
 
-// Reverse function: writes the input file and writes it reversed to the output file
+// Read the input file and writes it reversed to the output file
 int read_file (FILE * input) {
 
     char *buffer;
@@ -49,7 +49,7 @@ int main (int argc, char * argv[]) {
     if(argc == 1)
     {
         // Read from user (standard input), write to screen (standard output)
-        reverse(stdin, stdout);
+        read_file(stdin, stdout);
     }
     else if (argc == 2)
     {
