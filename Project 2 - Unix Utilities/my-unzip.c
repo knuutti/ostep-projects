@@ -30,8 +30,10 @@ int read_file (FILE * input) {
             counter++;
         }
         else {
-            fwrite(&counter, sizeof(int), 1, input);
-            fwrite(&current, sizeof(char), 1, input);
+            fread(&counter, sizeof(int), 1, input);
+            fread(&current, sizeof(char), 1, input);
+            printf("%d ", counter);
+            printf("%s\n", current + "\0");
             counter = 1;
             current = temp;
         }
@@ -46,7 +48,7 @@ int read_file (FILE * input) {
 FILE * open_file(char * file_name, char * mode) {
     FILE * file = NULL;
     if((file = fopen(file_name, mode)) == NULL) {
-        fprintf(stderr, "my-cat: cannot open file");
+        fprintf(stderr, "my-unzip cannot open file");
         exit(1);
     }
     return file;
