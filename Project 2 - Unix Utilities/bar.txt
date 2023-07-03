@@ -1,0 +1,6 @@
+this line has foo in it
+ei ole täällä sitä
+so does this foolish line; do you see where?
+terve
+even this line, which has barfood in it, will be printed.
+huhhuh
