@@ -6,7 +6,6 @@ Authors: Eetu Knutars & Joona Lappalainen
 Last modified: 3.7.2023
 */
 
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,7 +30,6 @@ int read_file (FILE * input, FILE * output) {
             counter++;
         }
         else {
-            //fprintf(output, "%d%c", counter, current + '\0');
             fwrite(&counter, sizeof(int), 1, output);
             fwrite(&current, sizeof(char), 1, output);
             counter = 1;
