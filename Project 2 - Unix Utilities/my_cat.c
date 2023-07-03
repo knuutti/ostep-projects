@@ -11,21 +11,10 @@ Last modified: 3.7.2023
 #include <string.h>
 #include <stdlib.h>
 
-// Linked list structure
-typedef struct rows {
-    char * row;
-    struct rows * next;
-    struct rows * prev;
-    } ROWS;
-
-// Defining pointers
-ROWS * pStart = NULL, * pEnd = NULL;
-ROWS * pNew, * ptr;
-
 size_t bufsize = 0;
 
 // Reverse function: writes the input file and writes it reversed to the output file
-int reverse (FILE * input, FILE * output) {
+int read_file (FILE * input) {
 
     char *buffer;
     if((buffer = (char *)malloc(bufsize * sizeof(char))) == NULL)
@@ -42,44 +31,7 @@ int reverse (FILE * input, FILE * output) {
         if (characters == -1) {
             break;
         }
-
-        if ((pNew = (ROWS*)malloc(sizeof(ROWS))) == NULL ){
-            fprintf(stderr, "malloc failed\n");
-            exit(1);
-        }
-        if ((pNew->row = (char*)malloc(bufsize)) == NULL ){
-            fprintf(stderr, "malloc failed\n");
-            exit(1);
-        }
-
-        strcpy(pNew->row, buffer); 
-        pNew->next = NULL;
-
-        if (pStart == NULL) { 
-            pStart = pNew;
-            pEnd = pNew;
-        } 
-        else { 
-            pEnd->next = pNew;
-            pNew->prev = pEnd;
-            pEnd = pNew;
-        }
-
     }
-
-    ptr = pEnd;
-    while (ptr != NULL) {
-        fprintf(output, "%s", ptr->row);
-        ptr = ptr->prev;
-    }
-
-    ptr = pStart;
-    while (ptr != NULL) {
-        pStart = ptr->next;
-        free(ptr);
-        ptr = pStart;
-    }
-    
     return(0);
 }
 
