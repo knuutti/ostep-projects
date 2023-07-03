@@ -22,15 +22,25 @@ int search_contents(char * search_word, FILE * file) {
 
 int main(int argc, char * argv[]) {
     
-    FILE * file = NULL;
-    for (int i = 2; i < argc; i++) {
-        if ((file = fopen(argv[i], "r")) == NULL) {
-            fprintf(stderr, "Failed to open file.\n");
-            exit(1);
-        } else {
-            search_contents(argv[1], file);
+    if (argc < 2) {
+        fprintf(stderr, "my-grep: searchterm [file ...]");
+        exit(1);
+    } 
+    else if (argc == 2) {
+        search_contents(argv[1], stdin);
+    }
+    else {
+        FILE * file = NULL;
+        for (int i = 2; i < argc; i++) {
+            if ((file = fopen(argv[i], "r")) == NULL) {
+                fprintf(stderr, "my-grep: cannot open file\n");
+                exit(1);
+            } else {
+                search_contents(argv[1], file);
+            }
+            fclose(file);
         }
-        fclose(file);
+        exit(0);
     }
 
     return(0);
