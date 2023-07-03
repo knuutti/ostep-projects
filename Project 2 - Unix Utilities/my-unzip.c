@@ -6,27 +6,39 @@ Authors: Eetu Knutars & Joona Lappalainen
 Last modified: 3.7.2023
 */
 
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#define MAX 1024
 
 size_t bufsize = 0;
 
-// Reads the input file and writes it to the screen
+// Reads the input file and writes it decompressed to the screen
 int read_file (FILE * input) {
 
-    char *buffer = NULL;
-    
-    while (1) {
-        size_t characters = getline(&buffer, &bufsize, input);
-
-        // Stop reading input on file end
-        if (characters == -1) {
+    int current = -1;
+    int temp;
+    int counter;
+    while(1) {
+        temp = fgetc(input);
+        // First iteration
+        if (current == -1) {
+            counter = 1;
+            current = temp;
+        }
+        else if (current == temp) {
+            counter++;
+        }
+        else {
+            fwrite(&counter, sizeof(int), 1, input);
+            fwrite(&current, sizeof(char), 1, input);
+            counter = 1;
+            current = temp;
+        }
+        if (feof(input)) {
             break;
         }
-        printf("%s", buffer);
     }
-    free(buffer);
 
     return(0);
 }
@@ -48,13 +60,10 @@ int main (int argc, char * argv[]) {
         exit(0);
     }
 
-    for(int i = 1; i < argc; i++)
-    {
-        FILE * input_file = open_file(argv[i], "r");
-        read_file(input_file);
-        fclose(input_file);
-        printf("\n");
-    }
+    FILE * input_file = open_file(argv[1], "r");
+    read_file(input_file);
+    fclose(input_file);
+    printf("\n");
 
     return(0);
 }

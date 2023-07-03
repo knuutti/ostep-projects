@@ -6,7 +6,6 @@ Authors: Eetu Knutars & Joona Lappalainen
 Last modified: 3.7.2023
 */
 
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
