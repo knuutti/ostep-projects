@@ -46,10 +46,13 @@ int main (int argc, char * argv[]) {
         exit(1);
     }
 
-    FILE * input_file = open_file(argv[1], "r");
+    FILE * input_file = NULL;
+    for (int i = 1; i < argc; i++) {
+        input_file = open_file(argv[1], "r");
     read_file(input_file);
     fclose(input_file);
     printf("\n");
+    }
 
     return(0);
 }
