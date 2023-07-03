@@ -45,7 +45,8 @@ int main (int argc, char * argv[]) {
     /* Exit successfully if no input files are given */
     if(argc == 1)
     {
-        exit(0);
+        fprintf(stderr, "my-unzip: file1\n");
+        exit(1);
     }
 
     FILE * input_file = open_file(argv[1], "r");
