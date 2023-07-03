@@ -20,6 +20,8 @@ int read_file (FILE * input) {
     
     current = (char *)malloc(sizeof(char));
 
+    fseek(input, sizeof(int), SEEK_SET);
+
     while(1) {
             fread(current, sizeof(char), 1, input);
             printf("%s", current);
