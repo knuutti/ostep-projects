@@ -22,7 +22,6 @@ int read_file (FILE * input, FILE * output) {
     int counter;
     while(1) {
         temp = fgetc(input);
-        //printf("%c\n", temp + '\0');
         // First iteration
         if (current == -1) {
             counter = 1;
@@ -32,7 +31,9 @@ int read_file (FILE * input, FILE * output) {
             counter++;
         }
         else {
-            printf("%c: %d\n", current + '\0', counter);
+            //fprintf(output, "%d%c", counter, current + '\0');
+            fwrite(&counter, sizeof(int), 1, output);
+            fwrite(&current, sizeof(char), 1, output);
             counter = 1;
             current = temp;
         }
