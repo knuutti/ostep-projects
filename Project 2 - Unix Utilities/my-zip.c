@@ -46,7 +46,7 @@ int read_file (FILE * input, FILE * output) {
 FILE * open_file(char * file_name, char * mode) {
     FILE * file = NULL;
     if((file = fopen(file_name, mode)) == NULL) {
-        fprintf(stderr, "my-cat: cannot open file");
+        fprintf(stderr, "my-zip: cannot open file");
         exit(1);
     }
     return file;
