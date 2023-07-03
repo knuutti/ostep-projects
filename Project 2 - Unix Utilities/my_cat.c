@@ -30,7 +30,7 @@ int read_file (FILE * input) {
         if (characters == -1) {
             break;
         }
-        fprintf(input, "%s", buffer);
+        fprintf(stdout, "%s", buffer);
     }
     return(0);
 }
@@ -57,6 +57,7 @@ int main (int argc, char * argv[]) {
         FILE * input_file = open_file(argv[i], "r");
         read_file(input_file);
         fclose(input_file);
+        printf("\n");
     }
 
     return(0);
