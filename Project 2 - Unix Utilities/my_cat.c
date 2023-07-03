@@ -27,7 +27,6 @@ int read_file (FILE * input) {
         size_t characters = getline(&buffer, &bufsize, input);
 
         // Stop reading input on file end
-        // If input is read from stdin, user can end the read by pressing Ctrl+D
         if (characters == -1) {
             break;
         }
@@ -44,38 +43,14 @@ FILE * open_file(char * file_name, char * mode) {
     return file;
 }
 
-int main (int argc, char * argv[]) {
+int main (char * argv[]) {
+    int i = 1;
 
-    if(argc == 1)
+    for(i;i<sizeof(argv);i++)
     {
-        // Read from user (standard input), write to screen (standard output)
-        read_file(stdin, stdout);
-    }
-    else if (argc == 2)
-    {
-        // Read from input file, write to screen (standard output)
-        FILE * input_file = open_file(argv[1], "r");
-        reverse(input_file, stdout);
+        FILE * input_file = open_file(argv[i], "r");
+        read_file(input_file);
         fclose(input_file);
-    }
-    else if (argc == 3)
-    {
-        // Read from input file, write to output file
-        if (argv[1] == argv[2])
-        {
-            fprintf(stderr, "Input and output file must differ.\n");
-            exit(1);
-        }
-        FILE * input_file = open_file(argv[1], "r");
-        FILE * output_file = open_file(argv[2], "w");
-        reverse(input_file, output_file);
-        fclose(input_file);
-        fclose(output_file);
-    }
-    else
-    {
-        fprintf(stderr, "usage: reverse <input> <output>\n");
-        exit(1);
     }
 
     return(0);
