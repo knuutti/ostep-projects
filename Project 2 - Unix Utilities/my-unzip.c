@@ -16,27 +16,14 @@ size_t bufsize = 0;
 // Reads the input file and writes it decompressed to the screen
 int read_file (FILE * input) {
 
-    int current = -1;
-    int temp;
-    int counter;
+    char * current = NULL;
+    
+    current = (char *)malloc(sizeof(char));
+
     while(1) {
-        temp = fgetc(input);
-        // First iteration
-        if (current == -1) {
-            counter = 1;
-            current = temp;
-        }
-        else if (current == temp) {
-            counter++;
-        }
-        else {
-            fread(&counter, sizeof(int), 1, input);
-            fread(&current, sizeof(char), 1, input);
-            printf("%d ", counter);
-            printf("%s\n", current + "\0");
-            counter = 1;
-            current = temp;
-        }
+            fread(current, sizeof(char), 1, input);
+            printf("%s", current);
+        
         if (feof(input)) {
             break;
         }
