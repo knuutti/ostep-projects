@@ -46,7 +46,13 @@ FILE * open_file(char * file_name, char * mode) {
 
 int main (int argc, char * argv[]) {
     
-    for(int i = 1; i <= argc; i++)
+    if(argc == 1)
+    {
+        fprintf(stderr, "Needs at least one input file.\n");
+        exit(1);
+    }
+
+    for(int i = 1; i < argc; i++)
     {
         FILE * input_file = open_file(argv[i], "r");
         read_file(input_file);
