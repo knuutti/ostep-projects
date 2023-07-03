@@ -10,24 +10,35 @@ Last modified: 3.7.2023
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define MAX 1024
 
 size_t bufsize = 0;
 
 // Reads the input file and writes it compressed to the output file
 int read_file (FILE * input, FILE * output) {
 
-    char * buffer = NULL;
-
-    while (1) {
-        size_t characters = getline(&buffer, &bufsize, input);
-
-        // Stop reading input on file end
-        if (characters == -1) {
+    int current = -1;
+    int temp;
+    int counter;
+    while(1) {
+        temp = fgetc(input);
+        // First iteration
+        if (current == -1) {
+            counter = 1;
+            current = temp;
+        }
+        else if (current == temp) {
+            counter++;
+        }
+        else {
+            printf("%d: %d\n", current, counter);
+            counter = 1;
+            current = temp;
+        }
+        if (feof(input)) {
             break;
         }
-        printf("%s", buffer);
     }
-    free(buffer);
 
     return(0);
 }
@@ -49,13 +60,12 @@ int main (int argc, char * argv[]) {
         exit(0);
     }
 
-    for(int i = 1; i < argc; i++)
-    {
-        FILE * input_file = open_file(argv[i], "r");
-        read_file(input_file, argv[i]);
-        fclose(input_file);
-        printf("\n");
-    }
+    FILE * input_file = open_file(argv[1], "r");
+    FILE * output_file = open_file(argv[2], "w");
+    read_file(input_file, output_file);
+    fclose(input_file);
+    fclose(output_file);
+    printf("\n");
 
     return(0);
 }

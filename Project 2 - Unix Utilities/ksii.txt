@@ -1,5 +1,5 @@
-lisää tekstiä
-onko foo täällä
+lisaa tekstia
+onko foo taalls
 en tiiä
 foo foo
-joo riiittää :D
+joo riiittaa :D
