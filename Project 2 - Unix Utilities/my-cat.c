@@ -8,12 +8,11 @@ Last modified: 3.7.2023
 
 #define _GNU_SOURCE
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 
 size_t bufsize = 0;
 
-// Read the input file and writes it reversed to the output file
+// Reads the input file and writes it to the screen
 int read_file (FILE * input) {
 
     char *buffer = NULL;
@@ -43,6 +42,7 @@ FILE * open_file(char * file_name, char * mode) {
 
 int main (int argc, char * argv[]) {
     
+    /* Exit successfully if no input files are given */
     if(argc == 1)
     {
         exit(0);
