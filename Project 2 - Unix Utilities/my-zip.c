@@ -9,14 +9,15 @@ Last modified: 3.7.2023
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 size_t bufsize = 0;
 
-// Reads the input file and writes it to the screen
-int read_file (FILE * input) {
+// Reads the input file and writes it compressed to the output file
+int read_file (FILE * input, FILE * output) {
 
-    char *buffer = NULL;
-    
+    char * buffer = NULL;
+
     while (1) {
         size_t characters = getline(&buffer, &bufsize, input);
 
@@ -51,7 +52,7 @@ int main (int argc, char * argv[]) {
     for(int i = 1; i < argc; i++)
     {
         FILE * input_file = open_file(argv[i], "r");
-        read_file(input_file);
+        read_file(input_file, argv[i]);
         fclose(input_file);
         printf("\n");
     }
