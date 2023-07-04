@@ -2,36 +2,52 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
-  
-// Let us create a global variable to change it in threads
-int g = 0;
-  
+
 // The function to be executed by all threads
 void *myThreadFun(void *vargp)
 {
     // Store the value argument passed to this thread
     int *myid = (int *)vargp;
   
-    // Let us create a static variable to observe its changes
-    static int s = 0;
-    // Change static and global variables
-    ++s; ++g;
-    sleep(1);
+    // Variable for tracking the thread number
+    static int i = 0;
+    i++;
+
+    //fseek(input, 0, SEEK_CUR);
+
     // Print the argument, static and global variables
-    printf("Thread ID: %d, Static: %d, Global: %d\n", *myid, ++s, ++g);
+    printf("Thread ID: %d, Thread number: %d\n", *myid, i);
 }
-  
-int main()
-{
+
+int zip(FILE * input, int procs, int segs) {
+
     int i;
     pthread_t tid;
 
-    printf("%d\n", get_nprocs());
+    fseek(input, 0, SEEK_END);
+    int file_size = ftell(input);
+    fseek(input, 0, SEEK_SET);
+
+    printf("%d\n", file_size);
   
-    // Let us create three threads
-    for (i = 0; i < 13; i++)
+    for (i = 0; i < procs; i++)
         pthread_create(&tid, NULL, myThreadFun, (void *)&tid);
   
     pthread_exit(NULL);
+
+    return(0);
+}
+  
+int main(int argc, char * argv[])
+{
+
+    FILE * input = fopen(argv[1], "r");
+    int procs = get_nprocs_conf();
+    int segs = procs - 1;
+
+    zip(input, procs, segs);
+
+    fclose(input);
+
     return 0;
 }
