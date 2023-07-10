@@ -23,9 +23,22 @@ void * parallelZip(void * args) {
 
     fseek(input, 0, SEEK_END);
     int file_size = ftell(input);
-    int seg_size = round(file_size / actual_arguments->n_thread);
-    printf("%d, %d\n", file_size, seg_size);
-    fseek(input, seg_size * actual_arguments->index, SEEK_SET);
+    int seg_size = file_size / actual_arguments->n_thread;
+
+    printf("i=%d, threads=%d\n\n", actual_arguments->index, actual_arguments->n_thread);
+
+    if (actual_arguments->index == actual_arguments->n_thread - 1) {
+        seg_size = file_size - ((actual_arguments->n_thread - 1) * seg_size);
+        fseek(input, -seg_size, SEEK_END);
+        printf("#################");
+    } else {
+        fseek(input, seg_size * actual_arguments->index, SEEK_SET);
+    }
+
+    printf("\n\n%d, %d, %d\n\n", file_size, seg_size, actual_arguments->index);
+    
+
+    printf("Fseekin arvo: %ld\n\n", ftell(input));
 
     int current = -1;
     int temp;
@@ -75,13 +88,13 @@ int main(int argc, char * argv[])
 {
 
     pthread_t tid;
-    int threads = get_nprocs_conf() - 1;
+    int threads = 4;// get_nprocs_conf();
 
     thread_args * args = malloc(sizeof *args);
   
-    for (int i = 0; i < threads; i++) {
-
-        printf("Loop %d\n", i+1);
+    int i = 0;
+    while (i < threads) {
+            
         args->index = i;
         args->n_thread = threads;
         sleep(1);
