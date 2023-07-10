@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include <math.h>
+#include <sys/sysinfo.h>
 
 typedef struct thread_args {
     int index;
@@ -21,8 +22,6 @@ void * parallelZip(void * args) {
     size_t bufsize = 0;
     FILE * input = NULL;
     FILE * output = NULL;
-
-    printf("i=%d\n", actual_arguments->index);
 
     if((input = fopen(actual_arguments->file_name, "r")) == NULL) {
         fprintf(stderr, "error: cannot open file '%s'\n", actual_arguments->file_name);
