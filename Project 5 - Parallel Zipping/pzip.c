@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <errno.h>
 #include <pthread.h>
 #include <math.h>
 
@@ -16,7 +19,16 @@ void * parallelZip(void * args) {
 
     size_t bufsize = 0;
     FILE * input = NULL;
+    FILE * output = NULL;
+    
     if((input = fopen("ksii.txt", "r")) == NULL) {
+        fprintf(stderr, "error: cannot open file\n");
+        exit(1);
+    }
+
+    char output_name[20];
+    sprintf(output_name, "./temp/temp%d.z", actual_arguments->index);
+    if((output = fopen(output_name, "w")) == NULL) {
         fprintf(stderr, "error: cannot open file\n");
         exit(1);
     }
@@ -25,85 +37,79 @@ void * parallelZip(void * args) {
     int file_size = ftell(input);
     int seg_size = file_size / actual_arguments->n_thread;
 
-    printf("i=%d, threads=%d\n\n", actual_arguments->index, actual_arguments->n_thread);
+    //printf("i=%d, threads=%d\n\n", actual_arguments->index, actual_arguments->n_thread);
 
     if (actual_arguments->index == actual_arguments->n_thread - 1) {
         seg_size = file_size - ((actual_arguments->n_thread - 1) * seg_size);
         fseek(input, -seg_size, SEEK_END);
-        printf("#################");
     } else {
         fseek(input, seg_size * actual_arguments->index, SEEK_SET);
     }
-
-    printf("\n\n%d, %d, %d\n\n", file_size, seg_size, actual_arguments->index);
-    
-
-    printf("Fseekin arvo: %ld\n\n", ftell(input));
 
     int current = -1;
     int temp;
     int counter;
     while(1) {
         temp = fgetc(input);
-        printf("%c", temp);
-        //fwrite(&current, sizeof(char), 1, stdout);
-        if (feof(input) || ftell(input) == seg_size * (actual_arguments->index + 1)) {
+        // First iteration
+        if (current == -1) {
+            counter = 1;
+            current = temp;
+        }
+        else if (current == temp) {
+            counter++;
+        }
+        else {
+            fwrite(&counter, sizeof(int), 1, output);
+            fwrite(&current, sizeof(char), 1, output);
+            counter = 1;
+            current = temp;
+        }
+        if  (ftell(input) == seg_size * (actual_arguments->index + 1)) {
+            fwrite(&counter, sizeof(int), 1, output);
+            fwrite(&current, sizeof(char), 1, output);
+            break;
+        }
+        if (feof(input)) {
             break;
         }
     }
 
     fclose(input);
-
-    //printf("Number: %d\n", actual_arguments->index);
+    fclose(output);
 
 }
 
-// int zip(FILE * input, int procs, int segs) {
-
-//     int i;
-//     pthread_t tid;
-
-//     fseek(input, 0, SEEK_END);
-//     int file_size = ftell(input);
-//     fseek(input, 0, SEEK_SET);
-
-//     printf("Size: %d, Threads: %d\n", file_size, procs);
-
-//     thread_args *args = malloc(sizeof(thread_args));
-  
-//     for (i = 0; i < procs; i++)
-
-//         args->index = i;
-//         args->file = input;
-//         printf("123123\n",i);
-
-//         pthread_create(&tid, NULL, parallelZip, args);
-  
-//     pthread_exit(NULL);
-
-//     return(0);
-// }
-  
 int main(int argc, char * argv[])
 {
+    int threads = get_nprocs_conf();
 
+    struct stat st = {0};
+
+    if (stat("temp", &st) == -1) {
+        mkdir("temp", 0700);
+    }
+
+    // Zipping part in threads
     pthread_t tid;
-    int threads = 4;// get_nprocs_conf();
-
-    thread_args * args = malloc(sizeof *args);
-  
-    int i = 0;
-    while (i < threads) {
-            
+    thread_args * args = NULL;
+    for (int i = 0; i < threads; i++) {
+        args = malloc(sizeof *args);
         args->index = i;
         args->n_thread = threads;
-        sleep(1);
-
         pthread_create(&tid, NULL, parallelZip, args);
+    }
+    pthread_exit(NULL);
+
+    // Combining the temporary files
+    FILE * zip_file = NULL;
+    if((zip_file = fopen("output.z", "w")) == NULL) {
+        fprintf(stderr, "error: cannot open file\n");
+        exit(1);
+    }
+    for (int i = 0; i < threads; i++) {
 
     }
-  
-    pthread_exit(NULL);
 
     return 0;
 }
