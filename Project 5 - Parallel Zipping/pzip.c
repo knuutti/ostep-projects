@@ -10,6 +10,7 @@
 typedef struct thread_args {
     int index;
     int n_thread;
+    char * file_name;
 } thread_args;
 
 // The function to be executed by all threads
@@ -20,16 +21,18 @@ void * parallelZip(void * args) {
     size_t bufsize = 0;
     FILE * input = NULL;
     FILE * output = NULL;
-    
-    if((input = fopen("ksii.txt", "r")) == NULL) {
-        fprintf(stderr, "error: cannot open file\n");
+
+    printf("i=%d\n", actual_arguments->index);
+
+    if((input = fopen(actual_arguments->file_name, "r")) == NULL) {
+        fprintf(stderr, "error: cannot open file '%s'\n", actual_arguments->file_name);
         exit(1);
     }
 
     char output_name[20];
     sprintf(output_name, "./temp/temp%d.z", actual_arguments->index);
     if((output = fopen(output_name, "w")) == NULL) {
-        fprintf(stderr, "error: cannot open file\n");
+        fprintf(stderr, "error: cannot open file '%s'\n", output_name);
         exit(1);
     }
 
@@ -82,10 +85,23 @@ void * parallelZip(void * args) {
 
 int main(int argc, char * argv[])
 {
+
+    /* Exit successfully if no input files are given */
+    if(argc < 3)
+    {
+        fprintf(stderr, "my-zip: file1 [file2 ...]\n");
+        exit(1);
+    }
+
     int threads = get_nprocs_conf();
+
+    if ((remove("output.z")) == 0) {
+        printf("Cleared output file.\n");
+    }
 
     struct stat st = {0};
 
+    // Making a temporary file for storing partial zip-files
     if (stat("temp", &st) == -1) {
         mkdir("temp", 0700);
     }
@@ -97,19 +113,37 @@ int main(int argc, char * argv[])
         args = malloc(sizeof *args);
         args->index = i;
         args->n_thread = threads;
+        args->file_name = argv[1];
         pthread_create(&tid, NULL, parallelZip, args);
     }
-    pthread_exit(NULL);
-
+    
     // Combining the temporary files
+    char c;
     FILE * zip_file = NULL;
-    if((zip_file = fopen("output.z", "w")) == NULL) {
-        fprintf(stderr, "error: cannot open file\n");
+    if((zip_file = fopen(argv[2], "w")) == NULL) {
+        fprintf(stderr, "error: cannot open file '%s'\n", argv[argc-1]);
         exit(1);
     }
-    for (int i = 0; i < threads; i++) {
 
+    FILE * temp_zip_file = NULL;
+    for (int i = 0; i < threads; i++) {
+        char file_name[20];
+        sprintf(file_name, "./temp/temp%d.z", i);
+        if((temp_zip_file = fopen(file_name, "r")) == NULL) {
+            fprintf(stderr, "error: cannot open file '%s'\n", file_name);
+            exit(1);
+        }
+        while ((c = fgetc(temp_zip_file)) != EOF) {
+            fputc(c, zip_file);
+        }
+        fclose(temp_zip_file);
+        remove(file_name);
     }
+    fclose(zip_file);
+    remove("temp");
+
+    pthread_exit(NULL);
+        
 
     return 0;
 }
