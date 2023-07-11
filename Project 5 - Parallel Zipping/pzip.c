@@ -147,8 +147,8 @@ int main (int argc, char * argv[]) {
     /* Exit successfully if no input files are given */
     if(argc < 3)
     {
-        fprintf(stderr, "my-zip: file1 [file2 ...]\n");
-        exit(1); // exit(0) ?
+        fprintf(stderr, "pzip: file1 [file2 ...]\n");
+        exit(0);
     }
 
     remove(argv[argc-1]);
