@@ -27,7 +27,6 @@ void * parallelZip(void * args) {
 
     thread_args * actual_arguments = args;
 
-    size_t bufsize = 0;
     FILE * input = NULL;
     FILE * output = NULL;
 
@@ -86,6 +85,7 @@ void * parallelZip(void * args) {
     fclose(input);
     fclose(output);
 
+    return(0);
 }
 
 int zip(char * input_name, char * output_name)
