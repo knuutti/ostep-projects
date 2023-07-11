@@ -1,3 +1,11 @@
+/* 
+CT30A3370 Käyttöjärjestelmät ja systeemiohjelmointi
+Project 5: Parallel zip
+
+Authors: Eetu Knutars & Joona Lappalainen
+Last modified: 11.7.2023
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -140,7 +148,7 @@ int main (int argc, char * argv[]) {
     if(argc < 3)
     {
         fprintf(stderr, "my-zip: file1 [file2 ...]\n");
-        exit(1);
+        exit(1); // exit(0) ?
     }
 
     remove(argv[argc-1]);
