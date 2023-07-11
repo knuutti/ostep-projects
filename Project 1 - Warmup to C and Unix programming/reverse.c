@@ -3,7 +3,7 @@ CT30A3370 Käyttöjärjestelmät ja systeemiohjelmointi
 Project 1: Warmup to C and Unix programming
 
 Authors: Eetu Knutars & Joona Lappalainen
-Last modified: 3.7.2023
+Last modified: 11.7.2023
 */
 
 #define _GNU_SOURCE
@@ -28,6 +28,7 @@ size_t bufsize = 0;
 int reverse (FILE * input, FILE * output) {
 
     char *buffer;
+    /* Allocate memory */
     if((buffer = (char *)malloc(bufsize * sizeof(char))) == NULL)
     {
         fprintf(stderr, "malloc failed\n");
@@ -42,11 +43,12 @@ int reverse (FILE * input, FILE * output) {
         if (characters == -1) {
             break;
         }
-
+        /* Allocate memory */
         if ((pNew = (ROWS*)malloc(sizeof(ROWS))) == NULL ){
             fprintf(stderr, "malloc failed\n");
             exit(1);
         }
+        /* Allocate memory */
         if ((pNew->row = (char*)malloc(bufsize)) == NULL ){
             fprintf(stderr, "malloc failed\n");
             exit(1);
@@ -55,7 +57,7 @@ int reverse (FILE * input, FILE * output) {
         strcpy(pNew->row, buffer); 
         pNew->next = NULL;
 
-        if (pStart == NULL) { 
+        if (pStart == NULL) { /* If list is empty */
             pStart = pNew;
             pEnd = pNew;
         } 
@@ -66,13 +68,13 @@ int reverse (FILE * input, FILE * output) {
         }
 
     }
-
+    /* Reversed writing */
     ptr = pEnd;
     while (ptr != NULL) {
         fprintf(output, "%s", ptr->row);
         ptr = ptr->prev;
     }
-
+    /* Free memory */
     ptr = pStart;
     while (ptr != NULL) {
         pStart = ptr->next;
@@ -82,7 +84,7 @@ int reverse (FILE * input, FILE * output) {
     
     return(0);
 }
-
+/* Opening file with error handler */
 FILE * open_file(char * file_name, char * mode) {
     FILE * file = NULL;
     if((file = fopen(file_name, mode)) == NULL) {
