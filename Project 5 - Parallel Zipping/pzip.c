@@ -44,7 +44,7 @@ void * parallelZip(void * args) {
 
     fseek(input, 0, SEEK_END);
     int file_size = ftell(input);
-    int seg_size = file_size / actual_arguments->n_thread;
+    int seg_size = ceil(file_size / actual_arguments->n_thread);
 
     if (actual_arguments->index == actual_arguments->n_thread - 1) {
         seg_size = file_size - ((actual_arguments->n_thread - 1) * seg_size);
