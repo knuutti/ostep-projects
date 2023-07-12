@@ -4,7 +4,7 @@ Project 2: Unix Utilities
 
 File: my-zip.c
 Authors: Eetu Knutars & Joona Lappalainen
-Last modified: 11.7.2023
+Last modified: 12.7.2023
 */
 
 #include <stdio.h>
@@ -65,7 +65,7 @@ int main (int argc, char * argv[]) {
     if(argc < 3)
     {
         fprintf(stderr, "my-zip: file1 [file2 ...]\n");
-        exit(1);
+        exit(0);
     }
 
     // Defining files and opening the output

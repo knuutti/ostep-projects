@@ -4,7 +4,7 @@ Project 2: Unix Utilities
 
 File: my-unzip.c
 Authors: Eetu Knutars & Joona Lappalainen
-Last modified: 11.7.2023
+Last modified: 12.7.2023
 */
 
 #include <stdio.h>
@@ -48,7 +48,7 @@ int main (int argc, char * argv[]) {
     if(argc == 1)
     {
         fprintf(stderr, "my-unzip: file1 [file2 ...]\n");
-        exit(1);
+        exit(0);
     }
 
     // Unzipping all the input files
