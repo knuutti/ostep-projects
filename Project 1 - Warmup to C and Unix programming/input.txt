@@ -1,11 +1,7 @@
-1
-2
-33
-4
-3
-4t
-34
-3
-
-
-
+hello
+this
+is 
+a file
+lets see
+if its reversed
+after running the program
